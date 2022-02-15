@@ -1,8 +1,9 @@
 package main
 
 import (
-	"io"
+	"first_app/chitchat/data"
 	"net/http"
+	"text/template"
 )
 
 func main() {
@@ -21,16 +22,28 @@ func main() {
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, "Hello, World")
-
-	// TODO: /threads作ったら以下のコードを適用する
 	// files := []string{"templates/layout.html",
 	// 	"templates/navbar.html",
 	// 	"templates/index.html"}
 
 	// templates := template.Must(template.ParseFiles(files...))
-	// threads, err := data.Threads()
-	// if err == nil {
-	// 	templates.ExecuteTemplate(w, "layout", threads)
-	// }
+	threads, err := data.Threads()
+	if err == nil {
+		public_tmpl_files := []string{"templates/layout.html",
+			"templates/navbar.html",
+			"templates/index.html"}
+
+		private_tmpl_files := []string{"templates/layout.html",
+			"templates/private.navbar.html",
+			"templates/index.html"}
+
+		var templates *template.Template
+
+		if err != nil {
+			templates = template.Must(template.ParseFiles(public_tmpl_files...))
+		} else {
+			templates = template.Must(template.ParseFiles(private_tmpl_files...))
+		}
+		templates.ExecuteTemplate(w, "layout", threads)
+	}
 }
