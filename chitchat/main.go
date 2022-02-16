@@ -40,6 +40,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 		var templates *template.Template
 
 		if err != nil {
+			// ParseFilesを使うとテンプレートファイルを解析してテンプレートを作れる
 			templates = template.Must(template.ParseFiles(public_tmpl_files...))
 		} else {
 			templates = template.Must(template.ParseFiles(private_tmpl_files...))
